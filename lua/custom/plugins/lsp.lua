@@ -28,7 +28,7 @@ return {
 
         -- Info
         map('K', vim.lsp.buf.hover, 'Hover')
-        map('<C-k>', vim.lsp.buf.signature_help, 'Signature help')
+        map('<C-s>', vim.lsp.buf.signature_help, 'Signature help')
         map('<leader>ls', vim.diagnostic.open_float, 'Show diagnostic')
 
         -- Actions
@@ -85,7 +85,15 @@ return {
 
     -- Language servers to enable
     local servers = {
-      ts_ls = {},
+      ts_ls = {
+        init_options = {
+          hostInfo = 'neovim',
+          maxTsServerMemory = 8192,
+          tsserver = {
+            path = '/Users/chrisbautista/.newt-cache/node-versions/n/versions/node/24.13.0/bin/node',
+          },
+        },
+      },
       eslint = {},
       pylsp = {},
       rust_analyzer = {},
