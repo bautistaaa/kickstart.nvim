@@ -80,64 +80,37 @@ return {
       end,
     })
 
-    -- Capabilities from blink.cmp
+    -- Set capabilities globally for all servers
     local capabilities = require('blink.cmp').get_lsp_capabilities()
+    vim.lsp.config('*', { capabilities = capabilities })
 
-    -- Language servers to enable
-    local servers = {
-      ts_ls = {
-        init_options = {
-          hostInfo = 'neovim',
-          maxTsServerMemory = 8192,
-          tsserver = {
-            path = '/Users/chrisbautista/.newt-cache/node-versions/n/versions/node/24.13.0/bin/node',
-          },
+    -- TypeScript-specific config
+    vim.lsp.config('ts_ls', {
+      init_options = {
+        hostInfo = 'neovim',
+        maxTsServerMemory = 8192,
+        tsserver = {
+          path = '/Users/chrisbautista/.newt-cache/node-versions/n/versions/node/24.13.0/bin/node',
         },
       },
-      eslint = {},
-      pylsp = {},
-      rust_analyzer = {},
-      bashls = {},
-      cssls = {},
-      dockerls = {},
-      html = {},
-      jsonls = {},
-      yamlls = {},
-      tailwindcss = {},
-    }
+    })
 
-    -- Mason package names (these differ from LSP server names)
-    local ensure_installed = {
-      'lua-language-server',
-      'typescript-language-server',
-      'eslint-lsp',
-      'python-lsp-server',
-      'rust-analyzer',
-      'bash-language-server',
-      'css-lsp',
-      'dockerfile-language-server',
-      'html-lsp',
-      'json-lsp',
-      'yaml-language-server',
-      'tailwindcss-language-server',
-      'stylua',
-      'prettier',
-    }
-
-    require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-    require('mason-lspconfig').setup {
+    -- Suppress noisy ESLint config errors (e.g. unknown environment keys from project eslintrc)
+    vim.lsp.config('eslint', {
       handlers = {
-        function(server_name)
-          local server = servers[server_name] or {}
-          server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-          require('lspconfig')[server_name].setup(server)
+        ['window/showMessage'] = function(_, result, ctx)
+          if result and result.message and result.message:find('Environment key') then
+            return
+          end
+          local client = vim.lsp.get_client_by_id(ctx.client_id)
+          local lvl = ({ 'ERROR', 'WARN', 'INFO', 'DEBUG' })[result.type]
+          vim.notify(('[%s] %s'):format(client and client.name or 'LSP', result.message), vim.log.levels[lvl])
         end,
       },
-    }
+    })
 
-    -- Lua
-    require('lspconfig').lua_ls.setup {
-      capabilities = capabilities,
+    -- Lua-specific config
+    vim.lsp.config('lua_ls', {
       on_init = function(client)
         if client.workspace_folders then
           local path = client.workspace_folders[1].name
@@ -158,6 +131,27 @@ return {
       settings = {
         Lua = {},
       },
+    })
+
+    -- Mason package names (these differ from LSP server names)
+    local ensure_installed = {
+      'lua-language-server',
+      'typescript-language-server',
+      'eslint-lsp',
+      'python-lsp-server',
+      'rust-analyzer',
+      'bash-language-server',
+      'css-lsp',
+      'dockerfile-language-server',
+      'html-lsp',
+      'json-lsp',
+      'yaml-language-server',
+      'tailwindcss-language-server',
+      'stylua',
+      'prettier',
     }
+
+    require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+    require('mason-lspconfig').setup { automatic_enable = true }
   end,
 }
