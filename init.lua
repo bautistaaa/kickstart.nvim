@@ -154,6 +154,7 @@ vim.o.inccommand = 'split'
 -- Show which line your cursor is on
 vim.o.cursorline = true
 vim.o.cursorcolumn = true
+vim.o.guicursor = 'n-v-c:block-Cursor,i-ci-ve:ver25-Cursor,r-cr:hor20-Cursor'
 
 -- Disable swap and backup files
 vim.o.swapfile = false
@@ -269,16 +270,18 @@ vim.api.nvim_create_autocmd('ColorScheme', {
   group = vim.api.nvim_create_augroup('kickstart-transparent', { clear = true }),
   callback = function()
     vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'NONE' })
-    vim.api.nvim_set_hl(0, 'CursorColumn', { bg = '#404040' })
-    vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#404040' })
-    vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = 'Yellow', bold = true })
+    vim.api.nvim_set_hl(0, 'Cursor', { fg = '#1e1e2e', bg = '#f5c2e7' })
+    vim.api.nvim_set_hl(0, 'Visual', { bg = '#52334a' })
+    vim.api.nvim_set_hl(0, 'CursorColumn', { bg = '#32273a' })
+    vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#32273a' })
+    vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = '#f5c2e7', bold = true })
     vim.api.nvim_set_hl(0, 'LineNr', { bg = 'NONE', fg = 'DarkGrey' })
-    vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#1a1a2e' })
-    vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#1a1a2e', fg = '#eeeeee' })
-    vim.api.nvim_set_hl(0, 'ErrorFloat', { bg = '#1a1a2e' })
-    vim.api.nvim_set_hl(0, 'WarningFloat', { bg = '#1a1a2e' })
-    vim.api.nvim_set_hl(0, 'InfoFloat', { bg = '#1a1a2e' })
-    vim.api.nvim_set_hl(0, 'HintFloat', { bg = '#1a1a2e' })
+    vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#1e1e2e' })
+    vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#1e1e2e', fg = '#eeeeee' })
+    vim.api.nvim_set_hl(0, 'ErrorFloat', { bg = '#1e1e2e' })
+    vim.api.nvim_set_hl(0, 'WarningFloat', { bg = '#1e1e2e' })
+    vim.api.nvim_set_hl(0, 'InfoFloat', { bg = '#1e1e2e' })
+    vim.api.nvim_set_hl(0, 'HintFloat', { bg = '#1e1e2e' })
   end,
 })
 
@@ -636,7 +639,7 @@ require('lazy').setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'default',
+        preset = 'super-tab',
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -681,14 +684,7 @@ require('lazy').setup({
     config = function()
       require('catppuccin').setup {
         flavour = 'mocha',
-        transparent_background = true,
-        color_overrides = {
-          mocha = {
-            base = '#000000',
-            mantle = '#000000',
-            crust = '#000000',
-          },
-        },
+        transparent_background = false,
         highlight_overrides = {
           mocha = function(C)
             return {
