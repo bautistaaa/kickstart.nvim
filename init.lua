@@ -198,7 +198,7 @@ vim.diagnostic.config {
   underline = { severity = vim.diagnostic.severity.ERROR },
 
   -- Can switch between these as you prefer
-  virtual_text = true,   -- Text shows up at the end of the line
+  virtual_text = true, -- Text shows up at the end of the line
   virtual_lines = false, -- Teest shows up underneath the line, with virtual lines
 
   -- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
@@ -229,7 +229,7 @@ vim.keymap.set('i', '<Right>', '')
 vim.keymap.set('n', '<Leader>x', '<Cmd>bd<CR>', { desc = 'Close current buffer' })
 vim.keymap.set('n', '<Leader>xx', '<Cmd>%bd<CR>', { desc = 'Close all buffers' })
 vim.keymap.set('n', '<Leader>xo', '<Cmd>%bd<Bar>e#<Bar>bd#<CR>', { desc = 'Close all buffers but current' })
-vim.keymap.set('n', '<C-c>', '<Cmd>bp|bd #<CR>', { desc = 'Close buffer, keep last one' })
+vim.keymap.set('n', '<C-c>', '<Cmd>bd<CR>', { desc = 'Close current buffer' })
 vim.keymap.set('n', '<Tab>', '<Cmd>bnext<CR>', { desc = 'Next buffer' })
 vim.keymap.set('n', '<S-Tab>', '<Cmd>bprevious<CR>', { desc = 'Previous buffer' })
 
@@ -270,18 +270,20 @@ vim.api.nvim_create_autocmd('ColorScheme', {
   group = vim.api.nvim_create_augroup('kickstart-transparent', { clear = true }),
   callback = function()
     vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'NONE' })
+    vim.api.nvim_set_hl(0, 'Normal', { bg = 'NONE' })
+    vim.api.nvim_set_hl(0, 'NormalNC', { bg = 'NONE' })
     vim.api.nvim_set_hl(0, 'Cursor', { fg = '#1e1e2e', bg = '#f5c2e7' })
     vim.api.nvim_set_hl(0, 'Visual', { bg = '#52334a' })
-    vim.api.nvim_set_hl(0, 'CursorColumn', { bg = '#32273a' })
-    vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#32273a' })
+    vim.api.nvim_set_hl(0, 'CursorColumn', { bg = 'NONE' })
+    vim.api.nvim_set_hl(0, 'CursorLine', { bg = 'NONE' })
     vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = '#f5c2e7', bold = true })
     vim.api.nvim_set_hl(0, 'LineNr', { bg = 'NONE', fg = 'DarkGrey' })
-    vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#1e1e2e' })
-    vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#1e1e2e', fg = '#eeeeee' })
-    vim.api.nvim_set_hl(0, 'ErrorFloat', { bg = '#1e1e2e' })
-    vim.api.nvim_set_hl(0, 'WarningFloat', { bg = '#1e1e2e' })
-    vim.api.nvim_set_hl(0, 'InfoFloat', { bg = '#1e1e2e' })
-    vim.api.nvim_set_hl(0, 'HintFloat', { bg = '#1e1e2e' })
+    vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'NONE' })
+    vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'NONE', fg = '#eeeeee' })
+    vim.api.nvim_set_hl(0, 'ErrorFloat', { bg = 'NONE' })
+    vim.api.nvim_set_hl(0, 'WarningFloat', { bg = 'NONE' })
+    vim.api.nvim_set_hl(0, 'InfoFloat', { bg = 'NONE' })
+    vim.api.nvim_set_hl(0, 'HintFloat', { bg = 'NONE' })
   end,
 })
 
@@ -410,7 +412,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -502,8 +504,7 @@ require('lazy').setup({
 
           -- Fuzzy find all the symbols in your current workspace.
           -- Similar to document symbols, except searches over your entire project.
-          vim.keymap.set('n', 'gW', builtin.lsp_dynamic_workspace_symbols,
-            { buffer = buf, desc = 'Open Workspace Symbols' })
+          vim.keymap.set('n', 'gW', builtin.lsp_dynamic_workspace_symbols, { buffer = buf, desc = 'Open Workspace Symbols' })
 
           -- Jump to the type of the word under your cursor.
           -- Useful when you're not sure what type a variable is and you want to see
@@ -536,8 +537,7 @@ require('lazy').setup({
       )
 
       -- Shortcut for searching your Neovim configuration files
-      vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config' } end,
-        { desc = '[S]earch [N]eovim files' })
+      vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config' } end, { desc = '[S]earch [N]eovim files' })
     end,
   },
 
@@ -684,7 +684,7 @@ require('lazy').setup({
     config = function()
       require('catppuccin').setup {
         flavour = 'mocha',
-        transparent_background = false,
+        transparent_background = true,
         highlight_overrides = {
           mocha = function(C)
             return {
@@ -702,7 +702,7 @@ require('lazy').setup({
   },
 
   -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim',  event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   { -- Collection of various small independent plugins/modules
     'nvim-mini/mini.nvim',
@@ -745,9 +745,29 @@ require('lazy').setup({
     build = ':TSUpdate',
     config = function()
       require('nvim-treesitter').setup {
-        ensure_installed = { 'bash', 'c', 'css', 'diff', 'go', 'graphql', 'html', 'javascript', 'json', 'lua',
-          'luadoc', 'markdown', 'markdown_inline', 'prisma', 'python', 'query', 'rust', 'svelte', 'tsx',
-          'typescript', 'vim', 'vimdoc' },
+        ensure_installed = {
+          'bash',
+          'c',
+          'css',
+          'diff',
+          'go',
+          'graphql',
+          'html',
+          'javascript',
+          'json',
+          'lua',
+          'luadoc',
+          'markdown',
+          'markdown_inline',
+          'prisma',
+          'query',
+          'rust',
+          'svelte',
+          'tsx',
+          'typescript',
+          'vim',
+          'vimdoc',
+        },
         auto_install = true,
         highlight = { enable = true },
       }
