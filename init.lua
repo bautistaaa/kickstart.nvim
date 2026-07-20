@@ -320,6 +320,7 @@ require('lazy').setup({
     dependencies = {
       'nvim-telescope/telescope.nvim',
     },
+    cmd = 'Jam',
     keys = {
       { '<leader>j', '<cmd>Jam<cr>', desc = 'Open [J]am' },
     },
