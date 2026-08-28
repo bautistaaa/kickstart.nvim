@@ -760,35 +760,41 @@ require('lazy').setup({
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
+    lazy = false,
     build = ':TSUpdate',
     config = function()
-      require('nvim-treesitter').setup {
-        ensure_installed = {
-          'bash',
-          'c',
-          'css',
-          'diff',
-          'go',
-          'graphql',
-          'html',
-          'javascript',
-          'json',
-          'lua',
-          'luadoc',
-          'markdown',
-          'markdown_inline',
-          'prisma',
-          'query',
-          'rust',
-          'svelte',
-          'tsx',
-          'typescript',
-          'vim',
-          'vimdoc',
-        },
-        auto_install = true,
-        highlight = { enable = true },
+      local treesitter = require 'nvim-treesitter'
+      local ensure_installed = {
+        'bash',
+        'c',
+        'css',
+        'diff',
+        'go',
+        'graphql',
+        'html',
+        'javascript',
+        'json',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'prisma',
+        'query',
+        'rust',
+        'svelte',
+        'tsx',
+        'typescript',
+        'vim',
+        'vimdoc',
       }
+
+      treesitter.setup {}
+      treesitter.install(ensure_installed)
+
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function(args) pcall(vim.treesitter.start, args.buf) end,
+      })
     end,
   },
 
